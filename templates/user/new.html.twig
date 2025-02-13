@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ titre }} d'un utilisateur{% endblock %}
+
+{% block body %}
+<div class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg mt-8">
+    <h1 class="text-3xl font-semibold text-center text-gray-800 mb-6">Créer un utilisateur</h1>
+
+    {{ form_start(form) }}
+    <div class="space-y-4">
+        <div>
+            {{ form_label(form.email, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-600'}}) }}
+            <div class="mt-1">
+                {{ form_widget(form.email, {'attr': {'class': 'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none'}}) }}
+            </div>
+        </div>
+
+        <div class="mb-6">
+        {{ form_label(form.roles, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-600'}}) }}
+        <div class="mt-1 space-y-2">
+            {{ form_widget(form.roles, {'attr': {'class': 'block w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none'}}) }}
+        </div>
+    </div>
+        
+        {% if titre == "Création" %}
+        <div>
+            {{ form_label(form.password, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-600'}}) }}
+            <div class="mt-1">
+                {{ form_widget(form.password, {'attr': {'class': 'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none'}}) }}
+            </div>
+        </div>
+        {% endif %}
+        <div>
+            {{ form_label(form.firstname, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-600'}}) }}
+            <div class="mt-1">
+                {{ form_widget(form.firstname, {'attr': {'class': 'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none'}}) }}
+            </div>
+        </div>
+
+        <div>
+            {{ form_label(form.lastname, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-600'}}) }}
+            <div class="mt-1">
+                {{ form_widget(form.lastname, {'attr': {'class': 'w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none'}}) }}
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 mt-4">
+                {% if titre == "Création" %}Créer{% else %}Modifier{% endif %} l'utilisateur
+            </button>
+        </div>
+    </div>
+    {{ form_end(form, {'render_rest': false}) }}
+</div>
+{% endblock %}
