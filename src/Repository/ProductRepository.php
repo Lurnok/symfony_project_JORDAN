@@ -40,4 +40,19 @@ class ProductRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findAllPriceDec(): array{
+        return $this->createQueryBuilder('p')
+            ->orderBy('p.price','DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findAllWithoutId(): array
+{
+    return $this->createQueryBuilder('p')
+        ->select('p.name, p.description, p.price, p.image_url') // Exclure 'id'
+        ->getQuery()
+        ->getResult();
+}
 }

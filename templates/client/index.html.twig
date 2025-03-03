@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Clients{% endblock %}
+
+{% block body %}
+<div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg mt-8">
+    <h1 class="text-3xl font-semibold text-center text-gray-800 mb-6">Liste des Clients</h1>
+
+    <div class="overflow-x-auto">
+        <table class="w-full border-collapse border border-gray-300">
+            <thead>
+                <tr class="bg-gray-100">
+                    <th class="border border-gray-300 px-4 py-2 text-left">ID</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Prénom</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Nom</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Email</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Téléphone</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Adresse</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Créé le</th>
+                    <th class="border border-gray-300 px-4 py-2 text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for client in clients %}
+                    <tr class="border border-gray-300">
+                        <td class="border border-gray-300 px-4 py-2">{{ client.id }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ client.firstname }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ client.lastname }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ client.email }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ client.phoneNumber }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ client.address }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ client.createdAt|date('d/m/Y H:i') }}</td>
+                        <td class="border border-gray-300 px-4 py-2 text-center">
+                            <a href="{{ path('client_edit', {id: client.id}) }}" class="text-blue-600 hover:underline">Modifier</a>
+                            |
+                            <a href="{{ path('client_delete', {id: client.id}) }}" class="text-red-600 hover:underline" onclick="return confirm('Voulez-vous vraiment supprimer ce client ?');">Supprimer</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center py-4">Aucun client trouvé.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-4">
+        <a href="{{ path('client_new') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">Ajouter un Client</a>
+    </div>
+</div>
+{% endblock %}

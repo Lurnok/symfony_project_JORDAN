@@ -11,13 +11,14 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Service\ProductService;
 
 class ProductController extends AbstractController
 {
     #[Route('/product', name: 'product_index')]
     public function index(ProductRepository $productRepository): Response
     {
-        $products = $productRepository->findAll();
+        $products = $productRepository->findAllPriceDec();
         return $this->render('product/index.html.twig', [
             'products' => $products,
         ]);
@@ -46,7 +47,7 @@ public function form(Request $request, ProductRepository $productRepository, Ent
 }
 
 #[Route('/product/delete/{id}', name: 'product_delete')]
-    public function delete(Product $product, ProductRepository $productRepository, EntityManagerInterface $manager): RedirectResponse
+    public function delete(Product $product, EntityManagerInterface $manager): RedirectResponse
     {
         if ($product) {
             $manager->remove($product);
@@ -61,4 +62,10 @@ public function form(Request $request, ProductRepository $productRepository, Ent
         return $this->redirectToRoute('product_index');
     }
 
+
+    #[Route('/product/export.csv', name: 'product_export')]
+    public function export(ProductRepository $productRepository): Response
+    {
+        return ProductService::csvExport($productRepository);
+    }
 }

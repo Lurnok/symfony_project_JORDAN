@@ -3,46 +3,47 @@
 {% block title %}Liste des Produits{% endblock %}
 
 {% block body %}
-<div class="max-w-7xl mx-auto p-6 bg-gray-100 rounded-lg shadow-lg mt-8">
-
-    <!-- Bouton d'ajout -->
-    <div class="flex justify-end mb-6">
-        <a href="{{ path('product_new') }}" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">
-            Ajouter un produit
-        </a>
+<div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg mt-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-semibold text-gray-800">Liste des Produits</h1>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('product_new') }}" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">
+                Ajouter un produit
+            </a>
+            <br>
+            <a href="{{ path('product_export') }}" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
+                Exporter vers CSV
+            </a>
+        {% endif %}
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div class="grid grid-cols-3 gap-6">
         {% for product in products %}
-            <div class="bg-white shadow-md rounded-lg p-4 flex flex-col justify-between">
-                <img 
-                    src="{{ product.imageUrl }}" 
-                    alt="{{ product.name }}" 
-                    class="w-full h-48 object-cover rounded-t-lg mb-4">
-                
+            <div class="bg-gray-100 p-4 rounded-lg shadow-md">
+                {% if product.imageUrl %}
+                    <img src="{{ product.imageUrl }}" alt="{{ product.name }}" class="w-full h-48 object-cover rounded-lg mb-4">
+                {% endif %}
                 <h2 class="text-xl font-semibold text-gray-800">{{ product.name }}</h2>
-                
-                <p class="text-gray-600 text-sm mt-2 mb-4">{{ product.description }}</p>
-                
-                <p class="text-lg font-bold text-blue-500 mb-4">{{ product.price }} €</p>
-                
-                <div class="flex justify-between">
+                <p class="text-gray-600">{{ product.description }}</p>
+                <p class="text-lg font-bold text-gray-900 mt-2">{{ product.price }} €</p>
+
+                <div class="mt-4 flex justify-between">
                     {% if is_granted('POST_EDIT', product) %}
-                        <a href="{{ path('product_edit', { id: product.id }) }}" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
+                        <a href="{{ path('product_edit', {'id': product.id}) }}" class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
                             Modifier
                         </a>
                     {% endif %}
+
                     {% if is_granted('POST_DELETE', product) %}
-                        <a href="{{ path('product_delete', { id: product.id }) }}" 
-                           class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
-                           onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?');">
-                            Supprimer
-                        </a>
+                        <form method="post" action="{{ path('product_delete', {'id': product.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+                            <button type="submit" class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
+                                Supprimer
+                            </button>
+                        </form>
                     {% endif %}
                 </div>
             </div>
-        {% else %}
-            <p class="text-gray-600 text-center col-span-full">Aucun produit disponible.</p>
         {% endfor %}
     </div>
 </div>
