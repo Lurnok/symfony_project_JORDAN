@@ -27,6 +27,8 @@ class UserController extends AbstractController
     #[Route('/user', name: 'user_index')]
     public function index(UserRepository $userRepository): Response
     {
+        $this->denyAccessUnlessGranted(UserVoter::VIEW,null);
+
         $users = $userRepository->findAll();
 
 
@@ -39,6 +41,8 @@ class UserController extends AbstractController
     #[Route('/user/new', name: 'user_new')]
     public function new(Request $request, UserPasswordHasherInterface $userPasswordHasherInterface): Response
     {
+        $this->denyAccessUnlessGranted(UserVoter::CREATE,null);
+
         $user = new User();
 
         $form = $this->createForm(UserType::class, $user);
@@ -67,6 +71,7 @@ class UserController extends AbstractController
     #[Route('/user/delete/{id}', name: 'user_delete')]
     public function delete(User $user, UserRepository $userRepository): RedirectResponse
     {
+        $this->denyAccessUnlessGranted(UserVoter::DELETE,null);
         if ($user) {
             $this->manager->remove($user);
             $this->manager->flush();

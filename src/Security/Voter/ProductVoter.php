@@ -6,19 +6,21 @@ use App\Enum\RolesEnum;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
+use App\Entity\Product;
 
 final class ProductVoter extends Voter
 {
-    public const EDIT = 'POST_EDIT';
-    public const VIEW = 'POST_VIEW';
-    public const DELETE = 'POST_DELETE';
+    public const EDIT = 'PRODUCT_EDIT';
+    public const VIEW = 'PRODUCT_VIEW';
+    public const DELETE = 'PRODUCT_DELETE';
+    public const CREATE = 'PRODUCT_CREATE';
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        // replace with your own logic
-        // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, [self::EDIT, self::VIEW, self::DELETE])
-            && $subject instanceof \App\Entity\Product;
+        if (!in_array($attribute, [self::EDIT, self::VIEW, self::DELETE])){
+            return false;
+        } 
+        return $subject instanceof Product || $subject === null;
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool

@@ -6,7 +6,7 @@
 <div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg mt-8">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-semibold text-gray-800">Liste des Produits</h1>
-        {% if is_granted('ROLE_ADMIN') %}
+        {% if is_granted('PRODUCT_CREATE') %}
             <a href="{{ path('product_new') }}" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">
                 Ajouter un produit
             </a>
@@ -28,13 +28,13 @@
                 <p class="text-lg font-bold text-gray-900 mt-2">{{ product.price }} €</p>
 
                 <div class="mt-4 flex justify-between">
-                    {% if is_granted('POST_EDIT', product) %}
+                    {% if is_granted('PRODUCT_EDIT', product) %}
                         <a href="{{ path('product_edit', {'id': product.id}) }}" class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
                             Modifier
                         </a>
                     {% endif %}
 
-                    {% if is_granted('POST_DELETE', product) %}
+                    {% if is_granted('PRODUCT_DELETE', product) %}
                         <form method="post" action="{{ path('product_delete', {'id': product.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?');">
                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
                             <button type="submit" class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">

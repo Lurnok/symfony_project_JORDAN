@@ -31,6 +31,7 @@ class ClientController extends AbstractController
     #[Route('/client/edit/{id}', name: 'client_edit')]
     public function new(Request $request, ClientRepository $clientRepository, EntityManagerInterface $manager, $id = null): Response
     {
+
         $client = $id ? $clientRepository->find($id) : new Client();
 
         if($id){

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Product;
 use App\Form\ProductType;
 use App\Repository\ProductRepository;
+use App\Security\Voter\ProductVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -29,6 +30,13 @@ class ProductController extends AbstractController
 public function form(Request $request, ProductRepository $productRepository, EntityManagerInterface $manager, $id = null): Response {
     $product = $id ? $productRepository->find($id) : new Product();
 
+    if($id){
+        $this->denyAccessUnlessGranted(ProductVoter::EDIT, $product);
+    }
+    else{
+        $this->denyAccessUnlessGranted(ProductVoter::CREATE, null);
+    }
+
     $form = $this->createForm(ProductType::class, $product);
     $form->handleRequest($request);
 
@@ -50,6 +58,7 @@ public function form(Request $request, ProductRepository $productRepository, Ent
     public function delete(Product $product, EntityManagerInterface $manager): RedirectResponse
     {
         if ($product) {
+            $this->denyAccessUnlessGranted(ProductVoter::DELETE,$product);
             $manager->remove($product);
             $manager->flush();
 
